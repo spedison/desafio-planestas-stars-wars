@@ -1,0 +1,87 @@
+### GET request with a header
+GET http://{{HOST}}:{{PORT}}/terreno
+Accept: application/json
+
+
+### GET one
+GET http://{{HOST}}:{{PORT}}/terreno/7
+Accept: application/json
+
+
+
+### POST para adicionar o novo Clima.
+POST http://{{HOST}}:{{PORT}}/terreno
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Pantanoso",
+  "trafegavel": false
+}
+
+### POST para adicionar o novo terreno.
+POST http://{{HOST}}:{{PORT}}/terreno
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Arenoso sem dunas",
+  "trafegavel": true
+}
+
+### POST para adicionar o novo terreno.
+POST http://{{HOST}}:{{PORT}}/terreno
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Arenoso com dunas",
+  "trafegavel": true
+}
+
+### POST para adicionar o novo terreno.
+POST http://{{HOST}}:{{PORT}}/terreno
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Muito Arenoso com ou sem dunas",
+  "trafegavel": false
+}
+
+
+### POST para adicionar o novo terreno.
+POST http://{{HOST}}:{{PORT}}/terreno
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Argila batida - plano 2",
+  "trafegavel": true
+}
+
+
+### POST para adicionar o novo terreno.
+POST http://{{HOST}}:{{PORT}}/terreno
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Outro terreno 5",
+  "viavelParaVida": true
+}
+
+### PATH para alterar o novo terreno.
+PATCH http://{{HOST}}:{{PORT}}/terreno/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Outro terreno 55",
+  "viavelParaVida": true
+}
+
+### DELETE o Clima.
+DELETE http://{{HOST}}:{{PORT}}/terreno/2
+Accept: application/json
+Content-Type: application/json

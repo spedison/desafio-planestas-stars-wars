@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  application:
+    name: tour
+  main:
+    banner-mode: console
+
+logging:
+  level:
+    root: DEBUG
+    org:
+      springframework:
+        web: DEBUG
+      hibernate: DEBUG
+    com:
+      spedison:
+        planetasstarwars: WARN
+
+
+management:
+  endpoint:
+    httptrace:
+      enabled: false
+debug: true

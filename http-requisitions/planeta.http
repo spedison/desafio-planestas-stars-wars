@@ -1,0 +1,123 @@
+### POST para adicionar o novo Planeta
+POST http://{{HOST}}:{{PORT}}/planeta
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Plutão",
+  "nomeTerreno":"Argila batida - plano",
+  "trafegavelTerreno":true,
+  "nomeClima":"Muito Calor (Mais que 60oC)",
+  "viavelParaVidaClima":"false",
+  "nomeRegiao":"Extremo Norte"
+}
+
+### POST para adicionar o novo Planeta.
+POST http://{{HOST}}:{{PORT}}/planeta
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Mercurio",
+  "nomeTerreno":"Argila batida - plano",
+  "trafegavelTerreno":true,
+  "nomeClima":"Muito Calor (Mais que 60oC)",
+  "viavelParaVidaClima":"false",
+  "nomeRegiao":"Extremo Norte"
+}
+
+### POST para adicionar o novo Planeta.
+POST http://{{HOST}}:{{PORT}}/planeta
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Venus",
+  "nomeTerreno":"Barranco Largo",
+  "trafegavelTerreno":true,
+  "nomeClima":"Ameno - Tropical",
+  "viavelParaVidaClima":"true",
+  "nomeRegiao":"Extremo Sul"
+}
+
+### POST para adicionar o novo Planeta. (6)
+POST http://{{HOST}}:{{PORT}}/planeta/6
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nomeTerreno":"Savanas",
+  "trafegavelTerreno":true,
+  "nomeClima":"Tropical Quente",
+  "viavelParaVidaClima":true,
+  "nomeRegiao":"Africa"
+}
+
+### POST para adicionar o novo Planeta. (6)
+POST http://{{HOST}}:{{PORT}}/planeta/6
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nomeTerreno":"Montanhoso",
+  "trafegavelTerreno":true,
+  "nomeClima":"Tropical - Com chuvas fortes - Monções",
+  "viavelParaVidaClima":true,
+  "nomeRegiao":"Oriente"
+}
+
+
+
+### POST para adicionar o novo Clima.
+POST http://{{HOST}}:{{PORT}}/planeta
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Mercúrio",
+  "nomeTerreno":"Barranco Largo",
+  "trafegavelTerreno":true,
+  "nomeClima":"Ameno - Tropical",
+  "viavelParaVidaClima":"true",
+  "nomeRegiao":"Extremo Sul"
+}
+
+### POST para adicionar o novo Clima.
+POST http://{{HOST}}:{{PORT}}/planeta/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nomeTerreno":"Arenoso sem dunas",
+  "nomeClima":"Quente",
+  "nomeRegiao":"Extremo Norte"
+}
+
+### POST para adicionar o novo Clima.
+POST http://{{HOST}}:{{PORT}}/planeta/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nomeTerreno":"Arenoso com dunas",
+  "nomeClima":"Quente",
+  "nomeRegiao":"Extremo Norte"
+}
+
+### Detalha o Planeta com ID 1
+GET http://{{HOST}}:{{PORT}}/planeta/6
+Accept: application/json
+Content-Type: application/json
+
+### Lista todos os planetas
+GET http://{{HOST}}:{{PORT}}/planeta
+Accept: application/json
+Content-Type: application/json
+
+
+### Detalha o Planeta com clima Calor
+GET http://{{HOST}}:{{PORT}}/planeta/clima/%25Cal%25
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: none
+Accept-Encoding: gzip, deflate, br
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7

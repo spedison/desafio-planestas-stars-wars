@@ -1,0 +1,45 @@
+### GET request with a header
+GET http://{{HOST}}:{{PORT}}/clima
+Accept: application/json
+
+
+### GET one
+GET http://{{HOST}}:{{PORT}}/clima/7
+Accept: application/json
+
+
+
+### POST para adicionar o novo Clima.
+POST http://{{HOST}}:{{PORT}}/clima
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Muito Calor (Mais que 60oC)",
+  "viavelParaVida": false
+}
+
+### POST para adicionar o novo Clima.
+POST http://{{HOST}}:{{PORT}}/clima
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Outro Clima 5",
+  "viavelParaVida": true
+}
+
+### PATH para alterar o novo Clima.
+PATCH http://{{HOST}}:{{PORT}}/clima/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nome":"Outro Clima 5",
+  "viavelParaVida": true
+}
+
+### DELETE o Clima.
+DELETE http://{{HOST}}:{{PORT}}/clima/7
+Accept: application/json
+Content-Type: application/json
