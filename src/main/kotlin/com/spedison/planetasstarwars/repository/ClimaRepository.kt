@@ -26,4 +26,17 @@ interface ClimaRepository : JpaRepository<Clima, Long> {
             "   and c.ativo = true " +
             "   and r.ativo = true" )
     fun countPlanetasAtivosByID(@Param("id") id:Long):Long
+
+
+    @Query("SELECT c  " +
+            "FROM " +
+            "   Clima c" +
+            "   JOIN FETCH c.regioes r " +
+            "   JOIN FETCH r.planeta p " +
+            "where " +
+            "   c.id = :id " +
+            "   and c.ativo = true " +
+            "   and p.ativo = true " +
+            "   and r.ativo = true" )
+    fun findClimaEPlanetasByID(@Param("id") id:Long):Optional<Clima>
 }

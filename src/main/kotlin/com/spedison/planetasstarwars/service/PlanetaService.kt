@@ -32,7 +32,7 @@ class PlanetaService(
     var planetaMapperListagem: PlanetaListagemMapper,
 ) {
 
-    val nomeClasse: String = this::class::simpleName?.toString()
+    val nomeClasse: String = PlanetaService::class.simpleName ?: ""
 
     fun listaUm(id: Long): ViewPlanetaDetalheDTO {
 
@@ -160,7 +160,11 @@ class PlanetaService(
                 .findAll(page)
                 .map(planetaMapperListagem::mappeiaParaDTO)
         } else {
-            val nomeAjustado : String = if (contem) {"%${filtro}%"} else {"${filtro}"}
+            val nomeAjustado: String = if (contem) {
+                "%${filtro}%"
+            } else {
+                "${filtro}"
+            }
             planetaRepository
                 .findNomePlaneta(nomeAjustado, page)
                 .map(planetaMapperListagem::mappeiaParaDTO)
@@ -190,7 +194,6 @@ class PlanetaService(
         val regiaoOpt = planetaRepository
             .findRegiaoDoPlaneta(idPlaneta, idRegiao)
 
-
         if (regiaoOpt.isEmpty) throw RegisterNotFoundException(
             "RemoveRegiao",
             "Planeta = $idPlaneta, regiao = $idRegiao" as Any,
@@ -207,6 +210,81 @@ class PlanetaService(
         return planeta
             .get()
             .let(planetaMapperDetalhe::mappeiaParaDTO)
+    }
+
+    @Transactional
+    fun alteraNomePlaneta(idPlaneta: Long, nome: String): ViewPlanetaListagemDTO {
+        var planeta: Optional<Planeta> = planetaRepository.findById(idPlaneta)
+
+        if (planeta.isEmpty) throw RegisterNotFoundException(
+            "AlternaNomePlaneta",
+            idPlaneta,
+            this.nomeClasse
+        )
+
+        if (planeta.get().ativo == false) throw RegisterNotFoundException(
+            "AlternaNomePlaneta - Não ativo",
+            idPlaneta,
+            this.nomeClasse
+        )
+
+        planeta.get().nome = nome
+        planetaRepository.save(planeta.get())
+
+        return planeta.let { it -> planetaMapperListagem.mappeiaParaDTO(it.get()) }
+    }
+
+    @Transactional
+    fun alteraNomeRegiaoPlaneta(idPlaneta: Long, idRegiao: Long, nome: String): ViewPlanetaDetalheDTO {
+
+        var regiao: Optional<Regiao> = regiaoRepository.findByIdAAndPlanetaId(idRegiao, idPlaneta)
+
+        if (regiao.isEmpty) throw RegisterNotFoundException(
+            "AlternaNomeRegiaoPlaneta",
+            "Planeta = $idPlaneta Regiao = $idRegiao",
+            this.nomeClasse
+        )
+
+        regiao.get().nome = nome
+        regiaoRepository.save(regiao.get())
+
+        val ret : ViewPlanetaDetalheDTO = planetaRepository
+            .findByIdAndAtivo(idPlaneta)
+            .map(planetaMapperDetalhe::mappeiaParaDTO)
+            .get()
+
+        return ret
+    }
+
+    fun removePlaneta(idPlaneta: Long) {
+        var planeta: Optional<Planeta> = planetaRepository.findById(idPlaneta)
+
+        if (planeta.isEmpty) throw RegisterNotFoundException(
+            "RemoverPlaneta",
+            idPlaneta,
+            this.nomeClasse
+        )
+
+        if (planeta.get().ativo == false) throw RegisterNotFoundException(
+            "RemoverPlaneta - Não ativo",
+            idPlaneta,
+            this.nomeClasse
+        )
+
+
+        // Resgata todas as regiões não nulas e ativas para desabilitar e manter a consistência.
+        planeta.get().regioes
+            .filterNotNull()
+            .filter { r -> r.ativo }
+            .forEach { it ->
+                it.ativo = false
+                regiaoRepository.save(it)
+            }
+
+        // Desativa o planeta.
+        planeta.get().ativo = false
+        planetaRepository.save(planeta.get())
+
     }
 
 }

@@ -1,7 +1,7 @@
 package com.spedison.planetasstarwars.map.clima.implementation.mapper
 
 import com.spedison.planetasstarwars.dto.clima.FormClimaDTO
-import com.spedison.planetasstarwars.map.ClimaMapper
+import com.spedison.planetasstarwars.map.clima.ClimaViewMapper
 import com.spedison.planetasstarwars.vo.Clima
 import com.spedison.planetasstarwars.vo.Regiao
 import org.junit.jupiter.api.AfterEach
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 internal class ClimaMapperTest {
 
-    var climaMapper = ClimaMapper()
+    var climaMapper = ClimaViewMapper()
     val nome = "Maior Que 60oC"
     val viavelParaVida = true
     val idClima = 10L

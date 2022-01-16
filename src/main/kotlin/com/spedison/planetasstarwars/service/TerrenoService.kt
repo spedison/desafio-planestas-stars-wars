@@ -2,6 +2,7 @@ package com.spedison.planetasstarwars.service
 
 import com.spedison.planetasstarwars.dto.terreno.FormTerrenoDTO
 import com.spedison.planetasstarwars.dto.terreno.ViewTerrenoDTO
+import com.spedison.planetasstarwars.dto.terreno.ViewTerrenoDetalheDTO
 import com.spedison.planetasstarwars.exception.RegisterConstraintException
 import com.spedison.planetasstarwars.exception.RegisterNotFoundException
 import com.spedison.planetasstarwars.map.GenericMapperInterface
@@ -19,6 +20,7 @@ import kotlin.streams.toList
 class TerrenoService(
     var repository: TerrenoRepository,
     var mapper: GenericMapperInterface<Terreno, FormTerrenoDTO, ViewTerrenoDTO>,
+    var mapperDetalhe: GenericMapperInterface<Terreno, FormTerrenoDTO, ViewTerrenoDetalheDTO>,
 ) {
 
     private val nomeClasse : String = this::class.simpleName?:""
@@ -32,9 +34,13 @@ class TerrenoService(
             .toList()
 
     @Cacheable("terrenoUnico")
-    fun listaUm(id: Long): ViewTerrenoDTO {
+    fun listaUm(id: Long): ViewTerrenoDetalheDTO {
 
-        val terreno = repository.findByIdAndAtivo(id, true)
+        var terreno = repository.findTerrenoEPlanetasByID(id)
+
+        if (terreno.isEmpty()) {
+            terreno = repository.findByIdAndAtivo(id, true)
+        }
 
         terreno.orElseThrow {
             RegisterNotFoundException(
@@ -44,7 +50,7 @@ class TerrenoService(
             )
         }
 
-        return mapper.mappeiaParaDTO(terreno.get())
+        return mapperDetalhe.mappeiaParaDTO(terreno.get())
     }
 
     @Transactional

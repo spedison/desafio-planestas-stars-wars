@@ -11,7 +11,7 @@ class Planeta (
     var id: Long?,
 
     @Column(length = 255, nullable = false, unique = true)
-    val nome: String,
+    var nome: String,
 
     @OneToMany(mappedBy = "planeta", fetch = FetchType.LAZY)
     var regioes: Collection<Regiao>,

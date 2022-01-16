@@ -1,7 +1,8 @@
 package com.spedison.planetasstarwars.service
 
-import com.spedison.planetasstarwars.dto.clima.ViewClimaDTO
+import com.spedison.planetasstarwars.dto.clima.ViewListatemClimaDTO
 import com.spedison.planetasstarwars.dto.clima.FormClimaDTO
+import com.spedison.planetasstarwars.dto.clima.ViewDetalheClimaDTO
 import com.spedison.planetasstarwars.exception.RegisterConstraintException
 import com.spedison.planetasstarwars.exception.RegisterNotFoundException
 import com.spedison.planetasstarwars.map.GenericMapperInterface
@@ -17,12 +18,13 @@ import kotlin.streams.toList
 @Component
 class ClimaService(
     val repository: ClimaRepository,
-    var mapper: GenericMapperInterface<Clima, FormClimaDTO, ViewClimaDTO>,
+    var mapper: GenericMapperInterface<Clima, FormClimaDTO, ViewListatemClimaDTO>,
+    var mapperDetalhe: GenericMapperInterface<Clima, FormClimaDTO, ViewDetalheClimaDTO>,
 ) {
     private val nomeClasse : String = this::class.simpleName?:""
 
     @Cacheable("climaTodos")
-    fun listaTodos(): List<ViewClimaDTO> =
+    fun listaTodos(): List<ViewListatemClimaDTO> =
         repository
             .findAllByAtivo(true)
             .stream()
@@ -30,9 +32,13 @@ class ClimaService(
             .toList()
 
     @Cacheable("climaUnico")
-    fun listaUm(id: Long): ViewClimaDTO {
+    fun listaUm(id: Long): ViewDetalheClimaDTO {
 
-        val clima = repository.findByIdAndAtivo(id, true)
+        var clima = repository.findClimaEPlanetasByID(id)
+
+        if (clima.isEmpty()){
+            clima = repository.findById(id)
+        }
 
         clima.orElseThrow {
             RegisterNotFoundException(
@@ -42,12 +48,12 @@ class ClimaService(
             )
         }
 
-        return mapper.mappeiaParaDTO(clima.get())
+        return mapperDetalhe.mappeiaParaDTO(clima.get())
     }
 
     @Transactional
     @CacheEvict(value = ["climaTodos", "climaUnico"], allEntries = true)
-    fun adiciona(valor: FormClimaDTO): ViewClimaDTO {
+    fun adiciona(valor: FormClimaDTO): ViewListatemClimaDTO {
         var clima: Clima = mapper.mappeiaParaClasse(valor)
         repository.save(clima)
         return mapper.mappeiaParaDTO(clima)
@@ -55,7 +61,7 @@ class ClimaService(
 
     @Transactional
     @CacheEvict(value = ["climaTodos", "climaUnico"], allEntries = true)
-    fun edita(form: FormClimaDTO, id: Long): ViewClimaDTO {
+    fun edita(form: FormClimaDTO, id: Long): ViewListatemClimaDTO {
 
         var clima: Optional<Clima> = repository.findByIdAndAtivo(id, true)
 
@@ -78,7 +84,7 @@ class ClimaService(
 
     @Transactional
     @CacheEvict(value = ["climaTodos", "climaUnico"], allEntries = true)
-    fun apaga(id: Long): ViewClimaDTO {
+    fun apaga(id: Long): ViewListatemClimaDTO {
 
         var clima: Optional<Clima> = repository.findByIdAndAtivo(id, true)
 

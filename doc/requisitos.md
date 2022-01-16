@@ -26,16 +26,23 @@ Você deverá desenvolver uma API responsável pelos dados dos planetas de Star 
   - Climas - Feito
   - Planetas <Nome, id> - Feito
   - Listagem de detalhes do planeta com regiões - Feito
+- Adicionar
+  - Terreno
+  - Clima
+  - Planeta
+    - Região em Planeta
 
 - Você deve implementar alguns métodos de busca a sua escolha.
-  - Busca por Clima
-  - Busca por nome parcial e inteiro de planeta
-  - Busca por Terreno
+  - Busca por nome de Clima   (OK, com Paginação usando o nome)
+  - Busca por nome de planeta (OK, com Paginação usando o nome)
+  - Busca por nome de Terreno (OK, com Paginação usando o nome)
 
 - Sua api deverá fazer uso de cache.
-    - Cache usando o padrão do SpringBoot
+    - Cache usando o padrão do SpringBoot (OK)
+      + Foi usada no Terreno e no Clima, pois eles sofrem menos alterações que os planetas.  
   
 - Sua api deverá ser documentada.
+  - Exemplos de como acessar a API podem ser vistos no Postman in : https://www.postman.com/spedison/workspace/planetasstarwars/overview 
   - Usando o ______
 
 - Sua api deverá utilizar o Actuator.

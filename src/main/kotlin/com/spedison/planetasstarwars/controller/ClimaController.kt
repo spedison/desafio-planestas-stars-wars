@@ -1,7 +1,8 @@
 package com.spedison.planetasstarwars.controller
 
-import com.spedison.planetasstarwars.dto.clima.ViewClimaDTO
+import com.spedison.planetasstarwars.dto.clima.ViewListatemClimaDTO
 import com.spedison.planetasstarwars.dto.clima.FormClimaDTO
+import com.spedison.planetasstarwars.dto.clima.ViewDetalheClimaDTO
 import com.spedison.planetasstarwars.service.ClimaService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,14 +15,14 @@ import javax.validation.Valid
 class ClimaController(var climaService: ClimaService) {
 
     @GetMapping()
-    fun listaTodos(): List<ViewClimaDTO> =
+    fun listaTodos(): List<ViewListatemClimaDTO> =
         this.climaService.listaTodos()
 
     @GetMapping("/{id}")
     fun listaUm(
         @PathVariable(name = "id", required = true) id: Long,
         uriBuilder: UriComponentsBuilder
-    ): ResponseEntity<ViewClimaDTO> {
+    ): ResponseEntity<ViewDetalheClimaDTO> {
         val ret = this.climaService.listaUm(id)
         val uri = uriBuilder.path("/clima/${ret.id}").build().toUri()
         return ResponseEntity.status(HttpStatus.OK).location(uri).body(ret)
@@ -31,24 +32,23 @@ class ClimaController(var climaService: ClimaService) {
     fun adiciona(
         @RequestBody @Valid formulario: FormClimaDTO,
         uriBuilder: UriComponentsBuilder
-    ): ResponseEntity<ViewClimaDTO> {
+    ): ResponseEntity<ViewListatemClimaDTO> {
         val ret = this.climaService.adiciona(formulario)
         val uri = uriBuilder.path("/clima/${ret.id}").build().toUri()
         return ResponseEntity.created(uri).body(ret)
     }
 
 
-    @PatchMapping("/{id}")
     @PutMapping("/{id}")
     fun edita(
         @RequestBody @Valid formulario: FormClimaDTO,
         @PathVariable(name = "id", required = true) id: Long
-    ): ViewClimaDTO = climaService.edita(formulario, id)
+    ): ViewListatemClimaDTO = climaService.edita(formulario, id)
 
 
     @DeleteMapping("/{id}")
     fun apaga(
         @PathVariable(name = "id", required = true) id: Long
-    ): ViewClimaDTO = climaService.apaga(id)
+    ): ViewListatemClimaDTO = climaService.apaga(id)
 
 }

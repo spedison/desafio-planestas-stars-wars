@@ -1,5 +1,6 @@
 package com.spedison.planetasstarwars.controller
 
+import com.spedison.planetasstarwars.dto.geral.FormAlteraNome
 import com.spedison.planetasstarwars.dto.planeta.FormPlanetaAddRegiaoDTO
 import com.spedison.planetasstarwars.dto.planeta.FormPlanetaDTO
 import com.spedison.planetasstarwars.dto.planeta.ViewPlanetaDetalheDTO
@@ -14,6 +15,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+import javax.ws.rs.Path
 
 @RestController
 @RequestMapping("/planeta")
@@ -87,16 +91,50 @@ class PlanetaController(val planetaService: PlanetaService) {
         return ResponseEntity.created(uri).body(ret)
     }
 
-    @DeleteMapping("/{idPlaneta}/regiao/{idRegiao}")
-    fun adicionaRegiao(
+    @PutMapping ("/nome/{idPlaneta}")
+    fun mudarNomePlaneta(
+        @PathVariable("idPlaneta") idPlaneta: Long,
+        @RequestBody @Valid nome: FormAlteraNome,
+        uriBuilder: UriComponentsBuilder
+    ) : ResponseEntity<ViewPlanetaListagemDTO> {
+        val ret = this.planetaService.alteraNomePlaneta(idPlaneta, nome.nome)
+        val uri = uriBuilder.path("/planeta/nome/${idPlaneta}").build().toUri()
+        return ResponseEntity.status(HttpStatus.OK).location(uri).body(ret)
+    }
+
+    @DeleteMapping ("/{idPlaneta}/regiao/{idRegiao}")
+    fun removerRegiaoDoPlaneta(
         @PathVariable("idPlaneta") idPlaneta: Long,
         @PathVariable("idRegiao") idRegiao: Long,
-        uriBuilder: UriComponentsBuilder,
-    ): ResponseEntity<ViewPlanetaDetalheDTO> {
+        uriBuilder: UriComponentsBuilder
+    ) : ResponseEntity<ViewPlanetaDetalheDTO> {
         val ret = this.planetaService.removeRegiao(idPlaneta, idRegiao)
         val uri = uriBuilder.path("/planeta/${idPlaneta}/regiao/${idRegiao}").build().toUri()
-        return ResponseEntity.created(uri).body(ret)
+        return ResponseEntity.status(HttpStatus.OK).location(uri).body(ret)
     }
+
+    @PutMapping("/{idPlaneta}/regiao/{idRegiao}")
+    fun alterarNomeRegiaoDoPlaneta(
+        @PathVariable("idPlaneta") idPlaneta: Long,
+        @PathVariable("idRegiao") idRegiao: Long,
+        @RequestBody @Valid nome: FormAlteraNome,
+        uriBuilder: UriComponentsBuilder
+    ) : ResponseEntity<ViewPlanetaDetalheDTO> {
+        val ret = this.planetaService.alteraNomeRegiaoPlaneta(idPlaneta, idRegiao, nome.nome)
+        val uri = uriBuilder.path("/planeta/${idPlaneta}/regiao/${idRegiao}").build().toUri()
+        return ResponseEntity.status(HttpStatus.OK).location(uri).body(ret)
+    }
+
+    @DeleteMapping ("/{idPlaneta}")
+    fun removerPlaneta(
+        @PathVariable("idPlaneta") idPlaneta: Long,
+        uriBuilder: UriComponentsBuilder
+    ) : ResponseEntity<String> {
+        this.planetaService.removePlaneta(idPlaneta)
+        val uri = uriBuilder.path("/planeta/${idPlaneta}").build().toUri()
+        return ResponseEntity.status(HttpStatus.OK).location(uri).body("OK")
+    }
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.spedison.planetasstarwars.repository
 
+import com.spedison.planetasstarwars.vo.Clima
 import com.spedison.planetasstarwars.vo.Terreno
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -26,4 +27,16 @@ interface TerrenoRepository : JpaRepository<Terreno, Long> {
             "   and t.ativo = true " +
             "   and r.ativo = true" )
     fun countPlanetasAtivosByID(@Param("id") id:Long):Long
+
+    @Query("SELECT t  " +
+            "FROM " +
+            "   Terreno t" +
+            "   JOIN FETCH t.regioes r " +
+            "   JOIN FETCH r.planeta p " +
+            "where " +
+            "   t.id = :id " +
+            "   and t.ativo = true " +
+            "   and p.ativo = true " +
+            "   and r.ativo = true" )
+    fun findTerrenoEPlanetasByID(@Param("id") id:Long):Optional<Terreno>
 }

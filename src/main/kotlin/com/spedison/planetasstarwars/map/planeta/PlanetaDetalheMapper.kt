@@ -3,12 +3,8 @@ package com.spedison.planetasstarwars.map.planeta
 
 import com.spedison.planetasstarwars.dto.planeta.FormPlanetaDTO
 import com.spedison.planetasstarwars.dto.planeta.ViewPlanetaDetalheDTO
-import com.spedison.planetasstarwars.dto.planeta.ViewPlanetaListagemDTO
-import com.spedison.planetasstarwars.dto.regiao.ViewRegiaoDTO
-import com.spedison.planetasstarwars.map.ClimaMapper
 import com.spedison.planetasstarwars.map.GenericMapperInterface
 import com.spedison.planetasstarwars.map.RegiaoMapper
-import com.spedison.planetasstarwars.map.TerrenoMapper
 import com.spedison.planetasstarwars.vo.Planeta
 import com.spedison.planetasstarwars.vo.Regiao
 import org.springframework.beans.factory.annotation.Autowired

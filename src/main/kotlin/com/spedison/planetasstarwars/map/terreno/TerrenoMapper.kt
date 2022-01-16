@@ -1,7 +1,8 @@
-package com.spedison.planetasstarwars.map
+package com.spedison.planetasstarwars.map.terreno
 
 import com.spedison.planetasstarwars.dto.terreno.FormTerrenoDTO
 import com.spedison.planetasstarwars.dto.terreno.ViewTerrenoDTO
+import com.spedison.planetasstarwars.map.GenericMapperInterface
 import com.spedison.planetasstarwars.vo.Terreno
 import com.spedison.planetasstarwars.vo.Regiao
 import org.springframework.stereotype.Component
