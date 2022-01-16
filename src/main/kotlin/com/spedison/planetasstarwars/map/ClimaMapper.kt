@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class ClimaMapper : GenericMapperInterface<Clima, FormClimaDTO, ViewClimaDTO> {
 
     override fun mappeiaParaClasse(value: FormClimaDTO): Clima =
-        Clima(null, value.nome, value.viavelParaVida, true, mutableListOf<Regiao>())
+        Clima(null, value.nome, value.viavelParaVida as Boolean, true, mutableListOf<Regiao>())
 
     override fun mappeiaParaDTO(value: Clima): ViewClimaDTO =
         ViewClimaDTO(value.id?:-1, value.nome, value.viavelParaVida)

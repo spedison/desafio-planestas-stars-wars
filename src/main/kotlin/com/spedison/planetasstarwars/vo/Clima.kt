@@ -17,7 +17,7 @@ data class Clima(
 
     var ativo:Boolean=true,
 
-    @OneToMany(mappedBy = "clima")
-    var regioes: MutableList<Regiao>
+    @OneToMany(mappedBy = "clima", fetch = FetchType.LAZY)
+    var regioes: Collection<Regiao>
 
 )

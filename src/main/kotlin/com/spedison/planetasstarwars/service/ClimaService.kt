@@ -2,10 +2,13 @@ package com.spedison.planetasstarwars.service
 
 import com.spedison.planetasstarwars.dto.clima.ViewClimaDTO
 import com.spedison.planetasstarwars.dto.clima.FormClimaDTO
+import com.spedison.planetasstarwars.exception.RegisterConstraintException
 import com.spedison.planetasstarwars.exception.RegisterNotFoundException
 import com.spedison.planetasstarwars.map.GenericMapperInterface
 import com.spedison.planetasstarwars.repository.ClimaRepository
 import com.spedison.planetasstarwars.vo.Clima
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -16,7 +19,9 @@ class ClimaService(
     val repository: ClimaRepository,
     var mapper: GenericMapperInterface<Clima, FormClimaDTO, ViewClimaDTO>,
 ) {
+    private val nomeClasse : String = this::class.simpleName?:""
 
+    @Cacheable("climaTodos")
     fun listaTodos(): List<ViewClimaDTO> =
         repository
             .findAllByAtivo(true)
@@ -24,7 +29,7 @@ class ClimaService(
             .map(mapper::mappeiaParaDTO)
             .toList()
 
-
+    @Cacheable("climaUnico")
     fun listaUm(id: Long): ViewClimaDTO {
 
         val clima = repository.findByIdAndAtivo(id, true)
@@ -33,7 +38,7 @@ class ClimaService(
             RegisterNotFoundException(
                 "listaUm",
                 id = id,
-                nomeClasse = Clima::class.java.toString()
+                nomeClasse = nomeClasse
             )
         }
 
@@ -41,6 +46,7 @@ class ClimaService(
     }
 
     @Transactional
+    @CacheEvict(value = ["climaTodos", "climaUnico"], allEntries = true)
     fun adiciona(valor: FormClimaDTO): ViewClimaDTO {
         var clima: Clima = mapper.mappeiaParaClasse(valor)
         repository.save(clima)
@@ -48,6 +54,7 @@ class ClimaService(
     }
 
     @Transactional
+    @CacheEvict(value = ["climaTodos", "climaUnico"], allEntries = true)
     fun edita(form: FormClimaDTO, id: Long): ViewClimaDTO {
 
         var clima: Optional<Clima> = repository.findByIdAndAtivo(id, true)
@@ -56,13 +63,13 @@ class ClimaService(
             RegisterNotFoundException(
                 "edita",
                 id = id,
-                nomeClasse = Clima::class.java.toString()
+                nomeClasse = nomeClasse
             )
         }
 
         clima.get().let {
             it.nome = form.nome
-            it.viavelParaVida = form.viavelParaVida
+            it.viavelParaVida = form.viavelParaVida as Boolean
             repository.save(it)
         }
 
@@ -70,9 +77,8 @@ class ClimaService(
     }
 
     @Transactional
+    @CacheEvict(value = ["climaTodos", "climaUnico"], allEntries = true)
     fun apaga(id: Long): ViewClimaDTO {
-
-        //TODO: Se o clima está sendo utilizado por alguma região ativa, ele não deve ser apagado.
 
         var clima: Optional<Clima> = repository.findByIdAndAtivo(id, true)
 
@@ -80,9 +86,14 @@ class ClimaService(
             RegisterNotFoundException(
                 "apaga",
                 id = id,
-                nomeClasse = Clima::class.java.toString()
+                nomeClasse = nomeClasse
             )
         }
+
+        if (repository.countPlanetasAtivosByID(clima.get().id ?: -1) > 0)
+            throw RegisterConstraintException("Registro de Clima está sendo utilizado no planeta.",
+                clima.get().id ?: -1,
+                nomeClasse)
 
         clima.get().let {
             it.ativo = false

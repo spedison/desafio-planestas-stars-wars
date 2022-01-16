@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class TerrenoMapper : GenericMapperInterface<Terreno, FormTerrenoDTO, ViewTerrenoDTO> {
 
     override fun mappeiaParaClasse(value: FormTerrenoDTO): Terreno =
-        Terreno(null, value.nome, value.trafegavel, true, mutableListOf<Regiao>())
+        Terreno(null, value.nome, value.trafegavel as Boolean, true, mutableListOf<Regiao>())
 
     override fun mappeiaParaDTO(value: Terreno): ViewTerrenoDTO =
         ViewTerrenoDTO(value.id?:-1, value.nome, value.trafegavel)

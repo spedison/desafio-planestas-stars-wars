@@ -13,8 +13,8 @@ class Planeta (
     @Column(length = 255, nullable = false, unique = true)
     val nome: String,
 
-    @OneToMany(mappedBy = "planeta")
-    var regioes: MutableList<Regiao>,
+    @OneToMany(mappedBy = "planeta", fetch = FetchType.LAZY)
+    var regioes: Collection<Regiao>,
 
     var ativo:Boolean=true
 )

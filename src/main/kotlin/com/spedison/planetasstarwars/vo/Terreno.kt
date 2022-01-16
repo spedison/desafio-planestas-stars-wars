@@ -16,6 +16,6 @@ data class Terreno(
 
     var ativo:Boolean=true,
 
-    @OneToMany(mappedBy="terreno")
-    var regioes: MutableList<Regiao>
+    @OneToMany(mappedBy="terreno", fetch = FetchType.LAZY)
+    var regioes: Collection<Regiao>
 )

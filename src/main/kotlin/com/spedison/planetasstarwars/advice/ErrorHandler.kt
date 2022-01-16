@@ -1,6 +1,7 @@
 package com.spedison.planetasstarwars.advice
 
 import com.fasterxml.jackson.core.JsonParseException
+import com.spedison.planetasstarwars.exception.RegisterConstraintException
 import com.spedison.planetasstarwars.exception.RegisterNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -32,7 +33,7 @@ class ErrorHandler {
         if (pos1 == -1) return ""
 
         val strRight = str.subSequence(pos1 + chave1.length, str.length)
-        val pos2 = strRight.lastIndexOf(chave2, strRight.length-1, false)
+        val pos2 = strRight.lastIndexOf(chave2, strRight.length - 1, false)
         if (pos2 == -1) return ""
 
         return strRight.substring(0, pos2)
@@ -53,10 +54,19 @@ class ErrorHandler {
     fun RegisterNotFoundExceptionHandler(
         servletRequest: HttpServletRequest,
         servletResponse: HttpServletResponse,
-        exception: Exception,
-    ): ResponseEntity<ErrorMessage> {
-        return ResponseEntity(ErrorMessage("Registro Nao Localizado", exception.toString()!!), HttpStatus.NOT_FOUND)
-    }
+        exception: RegisterNotFoundException,
+    ): ResponseEntity<ErrorMessage> =
+        ResponseEntity(ErrorMessage("Registro Nao Localizado", exception.toString()!!), HttpStatus.NOT_FOUND)
+
+
+    @ExceptionHandler(RegisterConstraintException::class)
+    fun RegisterConstraintExceptionHandler(
+        servletRequest: HttpServletRequest,
+        servletResponse: HttpServletResponse,
+        exception: RegisterConstraintException,
+    ): ResponseEntity<ErrorMessage> =
+        ResponseEntity(ErrorMessage("Violação de Integridade", exception.toString()!!), HttpStatus.METHOD_NOT_ALLOWED)
+
 
     @ExceptionHandler(SQLException::class)
     fun SqlExceptionHandler(
@@ -71,7 +81,7 @@ class ErrorHandler {
             val valorDuplicado: String = extraiValorRepetido(exception.message)
             return ResponseEntity(ErrorMessage("Valor duplicado ${valorDuplicado}, o valor já deve existir. Mude o valor e tente novamente.",
                 "Valor Duplicado"), HttpStatus.CONFLICT)
-        }else
+        } else
             return ResponseEntity(ErrorMessage("Problema ao executar comandos, chame o adm.", "Outros Erros."),
                 HttpStatus.BAD_REQUEST)
     }
@@ -99,10 +109,6 @@ class ErrorHandler {
 
         val errorMessageValidFields = ErrorMessageValidFieds("Problemas com dados do formulário.", listaCampos)
         return ResponseEntity(errorMessageValidFields, HttpStatus.BAD_REQUEST)
-
-
-        //return processFieldErrors(fieldErrors)
-        //return ResponseEntity(ErrorMessage("Problema ao executar comandos, chame o adm.", ""), HttpStatus.BAD_REQUEST)
     }
 
 

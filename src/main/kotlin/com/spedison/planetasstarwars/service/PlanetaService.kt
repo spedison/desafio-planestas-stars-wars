@@ -15,6 +15,8 @@ import com.spedison.planetasstarwars.vo.Clima
 import com.spedison.planetasstarwars.vo.Planeta
 import com.spedison.planetasstarwars.vo.Regiao
 import com.spedison.planetasstarwars.vo.Terreno
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -30,9 +32,11 @@ class PlanetaService(
     var planetaMapperListagem: PlanetaListagemMapper,
 ) {
 
+    val nomeClasse: String = this::class::simpleName?.toString()
+
     fun listaUm(id: Long): ViewPlanetaDetalheDTO {
 
-        val clima = planetaRepository.findByIdAndAtivo(id, true)
+        val clima = planetaRepository.findByIdAndAtivo(id)
 
         clima.orElseThrow {
             RegisterNotFoundException(
@@ -48,7 +52,7 @@ class PlanetaService(
     @Transactional
     fun adiciona(formulario: FormPlanetaDTO): ViewPlanetaListagemDTO {
 
-        val regiao = criaRegiao(
+        val regiao = adicionaRegiao(
             formulario.nomeClima,
             formulario.nomeTerreno,
             formulario.nomeRegiao,
@@ -72,7 +76,7 @@ class PlanetaService(
             formulario.nomeRegiao)
     }
 
-    private fun criaRegiao(
+    private fun adicionaRegiao(
         nomeClima: String,
         nomeTerreno: String,
         nomeRegiao: String,
@@ -125,7 +129,7 @@ class PlanetaService(
         if (planetaOpt.isEmpty) throw RegisterNotFoundException("AdicionaRegiao", idPlaneta, "Planeta")
         val planeta: Planeta = planetaOpt.get()
 
-        val regiao = criaRegiao(
+        val regiao = adicionaRegiao(
             formulario.nomeClima,
             formulario.nomeTerreno,
             formulario.nomeRegiao,
@@ -150,16 +154,59 @@ class PlanetaService(
         )
     }
 
-    fun listaTodos(): List<ViewPlanetaListagemDTO> =
-        planetaRepository
-            .findAll()
-            .map(planetaMapperListagem::mappeiaParaDTO)
-            .toList()
+    fun listaTodosPorNomePlaneta(filtro: String, contem: Boolean, page: Pageable): Page<ViewPlanetaListagemDTO> {
+        return if (filtro.trim().isEmpty()) {
+            planetaRepository
+                .findAll(page)
+                .map(planetaMapperListagem::mappeiaParaDTO)
+        } else {
+            val nomeAjustado : String = if (contem) {"%${filtro}%"} else {"${filtro}"}
+            planetaRepository
+                .findNomePlaneta(nomeAjustado, page)
+                .map(planetaMapperListagem::mappeiaParaDTO)
+        }
+    }
 
-    fun listaTodosPorNome(nome: String): List<ViewPlanetaDetalheDTO> =
-        planetaRepository
-            .findNomeClima(nome)
+    fun listaTodosPorNomeClima(nome: String, contem: Boolean, page: Pageable): Page<ViewPlanetaDetalheDTO> {
+
+        val nomeAjustado: String = if (contem) "%${nome}%" else nome
+
+        return planetaRepository
+            .findNomeClima(nomeAjustado, page)
             .map(planetaMapperDetalhe::mappeiaParaDTO)
-            .toList()
+    }
+
+    fun listaTodosPorNomeTerreno(nome: String, contem: Boolean, page: Pageable): Page<ViewPlanetaDetalheDTO> {
+
+        val nomeAjustado: String = if (contem) "%${nome}%" else nome
+
+        return planetaRepository
+            .findNomeTerreno(nomeAjustado, page)
+            .map(planetaMapperDetalhe::mappeiaParaDTO)
+    }
+
+    fun removeRegiao(idPlaneta: Long, idRegiao: Long): ViewPlanetaDetalheDTO {
+
+        val regiaoOpt = planetaRepository
+            .findRegiaoDoPlaneta(idPlaneta, idRegiao)
+
+
+        if (regiaoOpt.isEmpty) throw RegisterNotFoundException(
+            "RemoveRegiao",
+            "Planeta = $idPlaneta, regiao = $idRegiao" as Any,
+            this.nomeClasse
+        )
+
+        val regiao: Regiao = regiaoOpt.get()
+        regiao.ativo = false
+        regiaoRepository.save(regiao)
+
+        val planeta = planetaRepository
+            .findByIdAndAtivo(idPlaneta)
+
+        return planeta
+            .get()
+            .let(planetaMapperDetalhe::mappeiaParaDTO)
+    }
 
 }

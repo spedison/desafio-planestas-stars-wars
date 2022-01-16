@@ -18,9 +18,9 @@ data class Regiao(
 
     var ativo: Boolean = true,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     var clima: Clima,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     var terreno: Terreno
 )
