@@ -25,3 +25,5 @@ management:
     httptrace:
       enabled: false
 debug: true
+server:
+  port: 8888
