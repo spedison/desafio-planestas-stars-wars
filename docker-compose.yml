@@ -1,0 +1,51 @@
+version: "3.9"  # optional since v1.27.0
+
+services:
+
+  app_web:
+    restart: on-failure
+    build: .
+    hostname: app-web_planeta_star_wars
+    ports:
+      - "9999:8080"
+    volumes:
+      - .:/code
+      - logvolume:/var/log
+    depends_on:
+      - db_planetas_star_wars
+    links:
+      - db_planetas_star_wars
+    environment:
+      HOST: db
+      BANCO: desafio_planetas_star_wars
+      USUARIO: curso_udemy
+      SENHA: 123456
+    networks:
+      - frontend
+      - backend
+
+  db_planetas_star_wars:
+    image: mariadb:10.0.15
+    restart: on-failure
+    hostname: db
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: desafio_planetas_star_wars
+      MYSQL_USER: curso_udemy
+      MYSQL_PASSWORD: 123456
+      MYSQL_INITDB_SKIP_TZINFO:
+    volumes:
+      - mysql-db:/var/lib/mysql
+      - ./sqls/init/:/docker-entrypoint-initdb.d/
+    networks:
+      - backend
+
+volumes:
+  mysql-db: {}
+  logvolume: {}
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
