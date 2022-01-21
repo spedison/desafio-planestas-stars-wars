@@ -2,8 +2,8 @@ version: "3.9"  # optional since v1.27.0
 
 services:
 
-  app_web:
-    restart: on-failure
+  app_web_planetas_star_wars:
+    restart: unless-stopped
     build: .
     hostname: app-web_planeta_star_wars
     ports:
@@ -17,26 +17,28 @@ services:
       - db_planetas_star_wars
     environment:
       HOST: db
-      BANCO: desafio_planetas_star_wars
-      USUARIO: curso_udemy
-      SENHA: 123456
+      BANCO: ${NOME_BANCO}
+      USUARIO: ${USUARIO_BANCO}
+      SENHA: ${SENHA_BANCO_USER}
+## Usado pelo Falyway para inicializaçao e atualização da App.
+      USUARIO_ROOT_APP: ${USUARIO_ROOT_APP}
+      SENHA_ROOT_APP: ${SENHA_ROOT_APP}
     networks:
       - frontend
       - backend
 
   db_planetas_star_wars:
-    image: mariadb:10.0.15
+    image: mariadb:10.3.29
     restart: on-failure
     hostname: db
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: desafio_planetas_star_wars
-      MYSQL_USER: curso_udemy
-      MYSQL_PASSWORD: 123456
-      MYSQL_INITDB_SKIP_TZINFO:
+      MYSQL_DATABASE: ${NOME_BANCO}
+      MARIADB_ROOT_PASSWORD: ${SENHA_ROOT_APP}
+      MARIADB_USER: ${USUARIO_BANCO}
+      MARIADB_PASSWORD: ${SENHA_BANCO_USER}
+      MYSQL_INITDB_SKIP_TZINFO: 1
     volumes:
       - mysql-db:/var/lib/mysql
-      - ./sqls/init/:/docker-entrypoint-initdb.d/
     networks:
       - backend
 

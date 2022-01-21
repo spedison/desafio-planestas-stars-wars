@@ -1,0 +1,36 @@
+version: "3.9"  # optional since v1.27.0
+
+services:
+
+  db_planetas_star_wars:
+    image: mariadb:10.3.29
+    restart: on-failure
+    hostname: db
+    environment:
+      MYSQL_DATABASE: ${NOME_BANCO}
+
+      MYSQL_ROOT_PASSWORD: ${SENHA_ROOT_APP}
+      MARIADB_ROOT_PASSWORD: ${SENHA_ROOT_APP}
+
+#      MYSQL_USER: ${USARIO_BANCO}
+#      MYSQL_PASSWORD: ${SENHA_BANCO_USER}
+
+      MARIADB_USER: ${USUARIO_BANCO}
+      MARIADB_PASSWORD: ${SENHA_BANCO_USER}
+
+      MYSQL_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - mysql-db:/var/lib/mysql
+    networks:
+      - backend
+    ports:
+      - "3307:3306"
+
+volumes:
+  mysql-db: {}
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

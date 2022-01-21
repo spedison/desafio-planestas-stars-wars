@@ -16,6 +16,14 @@ spring:
     name: tour
   main:
     banner-mode: off
+  flyway:
+    baseline-on-migrate: true
+    url: jdbc:mysql://${HOST}:3306/${BANCO}
+    user: ${USUARIO_ROOT_APP}
+    password: ${SENHA_ROOT_APP}
+    driver-class-name: org.mariadb.jdbc.Driver
+    baseline-version: 3
+
 
 logging:
   level:
@@ -35,3 +43,26 @@ management:
   endpoint:
     httptrace:
       enabled: false
+    health:
+      show-details: always
+
+  auditevents:
+    enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: metrics,auditevents,beans,conditions,configprops,env,health,heapdump,info,logfile,loggers,sessions,shutdown,threaddump
+      base-path: /actuator
+  info:
+    build:
+      enabled: false
+    java:
+      enabled: true
+
+info:
+  app:
+    name: Spring Sample Application
+    description: This is my first spring boot application
+    version: 1.0.0
+
