@@ -2,7 +2,7 @@
 
 ## Especificação do desafio
 
-###Esse é o seu desafio, caso aceite =)
+### Esse é o seu desafio, caso aceite =)
 
 Você deverá desenvolver uma API responsável pelos dados dos planetas de Star wars.
 
@@ -25,8 +25,8 @@ Você deverá desenvolver uma API responsável pelos dados dos planetas de Star 
 - Listagens de : 
   - [X] Terrenos
   - [X] Climas
-  - [X] Planetas <Nome, id> - Feito
-  - [X] Listagem de detalhes do planeta com regiões - Feito
+  - [X] Planetas <Nome, id>
+  - [X] Listagem de detalhes do planeta com regiões
   
 - Adicionar
   - [X] Terreno
