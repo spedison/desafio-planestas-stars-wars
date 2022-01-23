@@ -47,9 +47,9 @@ class PlanetaController(val planetaService: PlanetaService) {
 
     @GetMapping("/clima")
     fun listaPorNomeClima(
-        @RequestParam(name = "filtro", required = true) nomeDoClima: String,
-        @RequestParam(name = "contem", required = false) contem: Boolean,
-        @PageableDefault(size = 20, page = 0, sort = ["id"], direction = Sort.Direction.ASC) page: Pageable,
+        @RequestParam(name = "filtro", required = true, defaultValue = "") nomeDoClima: String,
+        @RequestParam(name = "contem", required = false, defaultValue = "true") contem: Boolean,
+        @PageableDefault(size = 10, page = 0, sort = ["id"], direction = Sort.Direction.ASC) page: Pageable,
         uriBuilder: UriComponentsBuilder,
     ): ResponseEntity<Page<ViewPlanetaDetalheDTO>> {
         val ret = this.planetaService.listaTodosPorNomeClima(nomeDoClima, contem, page)
@@ -60,9 +60,9 @@ class PlanetaController(val planetaService: PlanetaService) {
 
     @GetMapping("/terreno")
     fun listaPorNomeTerreno(
-        @RequestParam(required = true, name = "filtro") nomeDoTerreno: String,
-        @RequestParam(name = "contem", required = false) contem: Boolean,
-        @PageableDefault(size = 20, page = 0, sort = ["id"], direction = Sort.Direction.ASC) page: Pageable,
+        @RequestParam(required = true, name = "filtro", defaultValue = "") nomeDoTerreno: String,
+        @RequestParam(name = "contem", required = false, defaultValue = "true") contem: Boolean,
+        @PageableDefault(size = 10, page = 0, sort = ["id"], direction = Sort.Direction.ASC) page: Pageable,
         uriBuilder: UriComponentsBuilder,
     ): ResponseEntity<Page<ViewPlanetaDetalheDTO>> {
         val ret = this.planetaService.listaTodosPorNomeTerreno(nomeDoTerreno, contem, page)

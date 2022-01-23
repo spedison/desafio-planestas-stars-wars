@@ -15,6 +15,7 @@ import com.spedison.planetasstarwars.vo.Clima
 import com.spedison.planetasstarwars.vo.Planeta
 import com.spedison.planetasstarwars.vo.Regiao
 import com.spedison.planetasstarwars.vo.Terreno
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -50,6 +51,7 @@ class PlanetaService(
     }
 
     @Transactional
+    @CacheEvict(value = ["climaTodos", "climaUnico", "terrenoTodos", "terrenoUnico"], allEntries = true)
     fun adiciona(formulario: FormPlanetaDTO): ViewPlanetaListagemDTO {
 
         val regiao = adicionaRegiao(
@@ -122,6 +124,7 @@ class PlanetaService(
     }
 
     @Transactional
+    @CacheEvict(value = ["climaTodos", "climaUnico", "terrenoTodos", "terrenoUnico"], allEntries = true)
     fun adicionaRegiao(idPlaneta: Long, formulario: FormPlanetaAddRegiaoDTO): ViewPlanetaListagemDTO {
 
         // Resgata o planeta.
@@ -189,6 +192,8 @@ class PlanetaService(
             .map(planetaMapperDetalhe::mappeiaParaDTO)
     }
 
+    @CacheEvict(value = ["climaUnico", "terrenoUnico"], allEntries = true)
+    @Transactional
     fun removeRegiao(idPlaneta: Long, idRegiao: Long): ViewPlanetaDetalheDTO {
 
         val regiaoOpt = planetaRepository

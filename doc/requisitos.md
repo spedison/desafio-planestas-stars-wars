@@ -50,7 +50,7 @@ Você deverá desenvolver uma API responsável pelos dados dos planetas de Star 
   - Exemplos de como acessar a API podem ser vistos no Postman in : https://www.postman.com/spedison/workspace/planetasstarwars/overview 
   - Usando o ______
   - Para a versão 2.6.2 do SpringBoot o Swaddger ou qualquer outro não tem o devido suporte.
-  - A documentação foi realizada no PostMan na URL: https://www.postman.com/spedison/workspace/planetasstarwars 
+  - A documentação foi realizada no PostMan na URL: [PostMan Doc Requests.](https://www.postman.com/spedison/workspace/planetasstarwars/overview)  
 
 - [X] Sua api deverá utilizar o Actuator.
   * http://<HOST>:<PORTA>/actuator/
